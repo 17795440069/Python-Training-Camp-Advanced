@@ -30,4 +30,20 @@ def smooth_l1(x, sigma=1.0):
     # 3. 对满足条件的元素应用第一个公式 (0.5 * (sigma * x)**2)。
     # 4. 对不满足条件的元素应用第二个公式 (|x| - 0.5 / sigma2)。
     # 5. 可以使用 np.where() 来根据条件选择应用哪个公式。
+    # 计算 sigma 的平方
+    sigma2 = sigma ** 2
+
+    # 创建满足条件 |x| < 1 / sigma2 的布尔掩码
+    mask = np.abs(x) < (1.0 / sigma2)
+
+    # 初始化输出数组，形状与输入 x 相同
+    loss = np.zeros_like(x, dtype=np.float64)
+
+    # 对满足条件的元素应用 L2 损失公式
+    loss[mask] = 0.5 * (sigma * x[mask]) ** 2
+
+    # 对不满足条件的元素应用 L1 损失公式
+    loss[~mask] = np.abs(x[~mask]) - 0.5 / sigma2
+
+    return loss
     pass 
