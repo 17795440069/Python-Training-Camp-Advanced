@@ -38,4 +38,32 @@ def calculate_iou(box1, box2):
     # 6. 计算并集面积 union_area = box1_area + box2_area - intersection_area。
     # 7. 计算 IoU = intersection_area / union_area。
     #    注意处理 union_area 为 0 的情况 (除零错误)。
+
+    # 获取两个矩形坐标
+    x1min, y1min, x1max, y1max = box1[0], box1[1], box1[2], box1[3]
+    x2min, y2min, x2max, y2max = box2[0], box2[1], box2[2], box2[3]
+
+    # 计算box1和box2的面积
+    s1 = (x1max - x1min + 1.0)*(y1max - y1min + 1.0)
+    s2 = (x2max - x2min + 1.0)*(y2max - y2min + 1.0)
+
+    # 计算两相交矩形坐标
+    xmin = np.maximum(x1min, x2min)
+    ymin = np.maximum(y1min, y2min)
+
+    xmax = np.minimum(x1max, x2max)
+    ymax = np.minimum(y1max, y2max)
+
+    # 计算相交矩阵长宽和面积
+    inter_h = np.maximum(xmax-xmin+1.0, 0)
+    inter_w = np.maximum(ymax-ymax+1.0, 0)
+
+    inter_area = inter_h*inter_w
+
+    # 计算相并面积
+    s_union = s1+s2-inter_area
+
+    # 计算交并比
+    iou = inter_area/s_union
+    return iou
     pass 
